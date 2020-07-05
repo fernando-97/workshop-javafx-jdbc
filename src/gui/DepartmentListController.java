@@ -9,6 +9,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import model.dao.DaoFactory;
 import model.dao.DepartmentDao;
 import model.entities.Department;
 import sample.Main;
@@ -45,6 +46,8 @@ public class DepartmentListController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeNodes();
+        setDepartmentDao(DaoFactory.createDepartmentDao());
+        updateTableView();
     }
 
     private void initializeNodes() {
