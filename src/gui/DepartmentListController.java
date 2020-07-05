@@ -1,5 +1,7 @@
 package gui;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -7,13 +9,18 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import model.dao.DepartmentDao;
 import model.entities.Department;
 import sample.Main;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DepartmentListController implements Initializable {
+    private DepartmentDao departmentDao;
+    private ObservableList<Department> departments;
+
     @FXML
     private Button btNew;
 
@@ -31,16 +38,31 @@ public class DepartmentListController implements Initializable {
         System.out.println("onBtNewAction");
     }
 
+    public void setDepartmentDao(DepartmentDao departmentDao) {
+        this.departmentDao = departmentDao;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeNodes();
     }
 
     private void initializeNodes() {
-        tableColumId.setCellFactory(new PropertyValueFactory("id"));
-        tableColumName.setCellFactory(new PropertyValueFactory("name"));
+        tableColumId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tableColumName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
         Stage stage = (Stage) Main.getMainScene().getWindow();
-        tableViewDepartment.prefHeightProperty().bind(stage.maxHeightProperty());
+        tableViewDepartment.prefHeightProperty().bind(stage.heightProperty());
+    }
+
+    public void updateTableView() {
+        if (departmentDao == null) {
+            throw new IllegalStateException("DepartmentDao não está instanciado");
+        }
+        else {
+            List<Department> list = departmentDao.findAll();
+            departments = FXCollections.observableArrayList(list);
+            tableViewDepartment.setItems(departments);
+        }
     }
 }

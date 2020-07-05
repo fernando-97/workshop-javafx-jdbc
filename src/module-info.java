@@ -5,4 +5,5 @@ module workshop.javafx.jdbc {
 
     opens sample;
     opens gui;
+    opens model.entities;
 }
