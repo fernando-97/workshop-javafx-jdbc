@@ -8,13 +8,13 @@ import java.util.Properties;
 public class DB {
     private static Connection conn = null;
 
-    public  static Connection getConnection(String db) {
+    public  static Connection getConnection() {
         if (conn == null) {
             try {
                 Properties props = loadProperties();
                 String url = props.getProperty("dburl");
                 conn = DriverManager.getConnection(url, props);
-                useDataBase(conn, db);
+                useDataBase(conn, "coursejdbc");
             } catch (SQLException throwables) {
                 throw new DbException(throwables.getMessage());
             }

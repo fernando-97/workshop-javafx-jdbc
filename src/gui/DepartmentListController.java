@@ -1,6 +1,7 @@
 package gui;
 
 import gui.util.Alerts;
+import gui.util.Listener;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,7 +28,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DepartmentListController implements Initializable {
+public class DepartmentListController implements Initializable, Listener {
     private DepartmentDao departmentDao;
     private ObservableList<Department> departments;
 
@@ -83,16 +84,26 @@ public class DepartmentListController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
             Pane pane = loader.load();
+            DepartmentFormController controller = loader.getController();
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Enter Department Data");
             dialogStage.setScene(new Scene(pane));
             dialogStage.setResizable(false);
             dialogStage.initOwner(stage);
+            controller.addListener(this);
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.showAndWait();
         } catch (IOException e) {
             Alerts.showAlert("IO Exception", "Error loading view", e.getCause().toString(), Alert.AlertType.ERROR);
         }
+        catch (Exception e) {
+            System.out.println(this);;
+        }
+    }
+
+    @Override
+    public void update(Object obj) {
+        updateTableView();
     }
 }
